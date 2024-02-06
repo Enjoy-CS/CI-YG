@@ -2,9 +2,8 @@ import argparse
 import sys
 from Scanner import *
 
-
 class Lox:
-    """_summary_
+    """
     Lox class
     """
 
@@ -57,5 +56,4 @@ class Lox:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="plox")
     parser.add_argument("name", help="The name of the file you want to run", nargs="?")
-    a = parser.parse_args()
     Lox.main(parser.parse_args())

@@ -2,7 +2,7 @@ from TokenType import *
 
 
 class Token:
-    """_summary_
+    """
     Token class
     """
 

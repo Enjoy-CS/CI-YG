@@ -4,7 +4,7 @@ from Lox import *
 
 
 class Scanner:
-    """_summary_
+    """
     Scanner class
     """
 
