@@ -1,4 +1,4 @@
-from Token import *
+from Token import Token
 from typing import Any
 
 

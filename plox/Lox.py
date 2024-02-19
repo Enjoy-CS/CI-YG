@@ -1,6 +1,9 @@
 import argparse
 import sys
 from Scanner import *
+from Parser import *
+from AstPrinter import *
+
 
 class Lox:
     """
@@ -37,20 +40,38 @@ class Lox:
 
     @classmethod
     def __run(cls, source: str) -> None:
-        scanner = Scanner(source)
+        scanner = Scanner(source, cls.error)  # 순환 참조 방지
         tokens = scanner.scan_tokens()
-
         for token in tokens:
             print(token.to_string())
-        print()
+        parser = Parser(tokens, cls.error)  # 순환 참조 방지
+        expression = parser.pasre()
 
-    @classmethod
-    def error(cls, line: int, message: str):
-        cls.__report(line, "", message)
+        if cls.had_error:
+            return
+
+        print(AstPrinter().print(expression))
 
     @classmethod
     def __report(cls, line: int, where: str, message: str):
         print(f"[line {line}] Error {where}: {message}")
+        cls.had_error = True
+
+    @classmethod
+    def error(cls, **kwargs):  # 메소드 오버로딩 대체
+        message = kwargs["message"]
+        if "line" in kwargs:
+            line = kwargs["line"]
+            cls.__report(line, "", message)
+            pass
+        elif "token" in kwargs:
+            token = kwargs["token"]
+            if token.token_type == TokenType.EOF:
+                cls.__report(token.line, " at end", message)
+            else:
+                cls.__report(token.line, f" at '{token.lexeme}'", message)
+        else:
+            cls.__report(-1, "Unkonw", "Error")
 
 
 if __name__ == "__main__":

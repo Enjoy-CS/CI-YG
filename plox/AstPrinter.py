@@ -1,8 +1,7 @@
 from typing import Any, List
-from Lox import Lox
 from Token import Token
 from TokenType import TokenType
-from Expr import *
+from Expr import Expr, Visitor, Binary, Grouping, Literal, Unary
 
 
 class AstPrinter(Visitor):

@@ -1,6 +1,6 @@
-from Token import *
-from TokenType import *
-from Lox import *
+from Token import Token
+from TokenType import TokenType
+from typing import Callable
 
 
 class Scanner:
@@ -27,12 +27,13 @@ class Scanner:
         "while": TokenType.WHILE,
     }
 
-    def __init__(self, source: str) -> None:
+    def __init__(self, source: str, lox_error: Callable) -> None:
         self.__source = source
         self.__tokens = list()
         self.__start = 0
         self.__current = 0
         self.__line = 1
+        self.__lox_error = lox_error
 
     def scan_tokens(self) -> list:
         while not self.__is_at_end():
@@ -100,7 +101,7 @@ class Scanner:
                 elif c.isalpha() or c == "_":
                     self.__identifier()
                 else:
-                    Lox.error(self.__line, "Unexpected character.")
+                    self.__lox_error(line=self.__line, message="Unexpected character.")
 
     def __add_token(self, tokenType: TokenType, literal: object = None) -> None:
         self.__tokens.append(
@@ -146,7 +147,7 @@ class Scanner:
             self.__advance()
 
         if self.__is_at_end():
-            Lox.error(self.__line, "Unterminated string.")
+            self.__lox_error(line=self.__line, message="Unterminated string.")
             return
 
         self.__advance()
